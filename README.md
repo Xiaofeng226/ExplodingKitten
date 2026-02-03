@@ -75,7 +75,7 @@ Contributions are welcome! Feel free to:
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-Add more cards types to your liking!!!!
+Add more cards types to your liking, such as the lack of my card type of nope!!!!
 
 ## 📝 License
 
