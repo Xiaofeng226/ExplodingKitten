@@ -85,12 +85,24 @@ Discard = []
 n = 0
 
 
-def drawC(Deck, B):
-    """Takes element 0 from list A and puts it in list B
+def draw_card(deck: List[str], hand: List[str]) -> Optional[str]:
     """
-    x = Deck[0]
-    Deck.pop(0)
-    B += [x]
+    Draw a card from the deck and add it to the player's hand.
+    
+    Args:
+        deck: The deck to draw from
+        hand: The player's hand to add the card to
+    
+    Returns:
+        Optional[str]: The card drawn, or None if deck is empty
+    """
+    if not deck:
+        print("Warning: Deck is empty!")
+        return None
+    
+    card = deck.pop(0)
+    hand.append(card)
+    return card
 
 
 
