@@ -3,7 +3,7 @@
 #
 #
 import random
-# ==================== CARD DEFINITIONS ====================
+#  CARD DEFINITIONS
 
 
 # Card names
@@ -107,15 +107,72 @@ def draw_card(deck: List[str], hand: List[str]) -> Optional[str]:
 
 
 
-# Cards
-
-
-def shuffle(A):
-    """ Rearranges the list of A
+def shuffle_deck(deck: List[str]) -> List[str]:
     """
-    random.shuffle(A)
-    return A
-        
+    Shuffle the deck randomly.
+    
+    Args:
+        deck: The deck to shuffle
+    
+    Returns:
+        List[str]: The shuffled deck
+    """
+    random.shuffle(deck)
+    return deck
+
+def display_hand(hand: List[str]) -> None:
+    """
+    Display a player's hand in a numbered, easy-to-read format.
+    
+    Args:
+        hand: The player's hand to display
+    """
+    print("\n" + "="*50)
+    print("YOUR HAND:")
+    print("="*50)
+    for i, card in enumerate(hand, 1):
+        print(f"{i}. {card}")
+    print("="*50 + "\n")
+
+
+def get_valid_input(prompt: str, valid_options: List[str]) -> str:
+    """
+    Get validated input from the user.
+    
+    Args:
+        prompt: The prompt to display to the user
+        valid_options: List of valid input options
+    
+    Returns:
+        str: A valid user input
+    """
+    while True:
+        user_input = input(prompt).strip().upper()
+        if user_input in valid_options:
+            return user_input
+        print(f"Invalid input. Please enter one of: {', '.join(valid_options)}")
+
+
+def get_valid_number(prompt: str, min_val: int, max_val: int) -> int:
+    """
+    Get a valid number input from the user within a specified range.
+    
+    Args:
+        prompt: The prompt to display
+        min_val: Minimum acceptable value (inclusive)
+        max_val: Maximum acceptable value (inclusive)
+    
+    Returns:
+        int: A valid number within the specified range
+    """
+    while True:
+        try:
+            value = int(input(prompt))
+            if min_val <= value <= max_val:
+                return value
+            print(f"Please enter a number between {min_val} and {max_val}")
+        except ValueError:
+            print("Please enter a valid number")
 
 def checkLost(A):
     """ Checks if hand A wins 
