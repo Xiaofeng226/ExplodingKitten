@@ -5,6 +5,7 @@
 import random
 # ==================== CARD DEFINITIONS ====================
 
+## New commits now on new account
 # Card names
 EK = "Exploding Kitten"
 D = "Defuse Card"
