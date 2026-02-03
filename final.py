@@ -55,7 +55,29 @@ CARD_DESCRIPTIONS = {
 # All cat card types
 CAT_CARDS = [Ct, Cw, Cp, Cb, Cr]
 
-Deck = [EK] + 6*[D] + 4*[A] + 4*[F] + 4*[Sh] + 4*[Sk] + 5*[Se] + 4*[Ct] + 4*[Cw] + 4*[Cp] + 4*[Cb] + 4*[Cr]
+def create_deck() -> List[str]:
+    """
+    Create and return the initial game deck.
+    
+    Returns:
+        List[str]: A list containing all game cards in their initial quantities
+    """
+    deck = (
+        [EK] +           # 1 Exploding Kitten (more added based on player count)
+        6 * [D] +        # 6 Defuse cards
+        4 * [A] +        # 4 Attack cards
+        4 * [F] +        # 4 Favor cards
+        5 * [N] +        # 5 Nope cards
+        4 * [Sh] +       # 4 Shuffle cards
+        4 * [Sk] +       # 4 Skip cards
+        5 * [Se] +       # 5 See the Future cards
+        4 * [Ct] +       # 4 Taco Cat cards
+        4 * [Cw] +       # 4 Watermelon Cat cards
+        4 * [Cp] +       # 4 Potato Cat cards
+        4 * [Cb] +       # 4 Beard Cat cards
+        4 * [Cr]         # 4 Rainbow Cat cards
+    )
+    return deck
 
 P1 = []
 P2 = []
