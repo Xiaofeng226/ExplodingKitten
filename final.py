@@ -174,6 +174,46 @@ def get_valid_number(prompt: str, min_val: int, max_val: int) -> int:
         except ValueError:
             print("Please enter a valid number")
 
+
+# ==================== CARD ACTIONS ====================
+
+def play_skip(hand: List[str], card_index: int, discard: List[str]) -> bool:
+    """
+    Play a skip card to end the turn without drawing.
+    
+    Args:
+        hand: Player's hand
+        card_index: Index of the skip card
+        discard: Discard pile
+    
+    Returns:
+        bool: True if successful
+    """
+    print("\nYou skip your turn!")
+    discard.append(hand.pop(card_index))
+    return True
+
+
+def play_shuffle(deck: List[str], hand: List[str], card_index: int, discard: List[str]) -> bool:
+    """
+    Play a shuffle card to shuffle the deck.
+    
+    Args:
+        deck: The game deck
+        hand: Player's hand
+        card_index: Index of the shuffle card
+        discard: Discard pile
+    
+    Returns:
+        bool: True if successful
+    """
+    shuffle_deck(deck)
+    print("\nThe deck has been shuffled!")
+    discard.append(hand.pop(card_index))
+    return True
+
+
+
 def checkLost(A):
     """ Checks if hand A wins 
     """
@@ -181,15 +221,6 @@ def checkLost(A):
         return True
     else:
         return False
-
-
-def skip(CL, P, Discard):
-    """Skips one turn ahead
-    """
-    print("You skip to your opponents turn!")
-    print()
-    Discard += [P[CL]]
-    P.pop(CL-1)
 
 
 def favor(P1, P2):
