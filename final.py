@@ -1,38 +1,62 @@
-# Name: Max Schernikau and Xiaofeng Li
+# Name: Xiaofeng Li
 # File: final.py
 #
 #
 import random
+# ==================== CARD DEFINITIONS ====================
+
+# Card names
 EK = "Exploding Kitten"
-EKD = "You must show this card immediately. Unless you have a Defuse, you're dead. When you die, put the kitten that killed you face up in front of you so that everyone can see that you're dead, and the rest of your cards face down in front of you."
-
 D = "Defuse Card"
-DD = "If you drew an Exploding Kitten, you can play this card instead of dying. Place your Defuse in the Discard Pile. Then take the Exploding Kitten, and without reordering or viewing the other cards, secretly put it back in the Draw Pile anywhere you'd like. Your turn is over after playing this card."
-
 A = "Attack Card"
-AD = "End your turn without drawing a card, and immediately force the next player to take 2 turns in a row. If the victim of an Attack plays this card on any of their turns, the attacks 'stack' and their turns are immediately transferred to the next player, who must take the Attacker's current and remaining untaken turn(s) PLUS 2 additional turns."
-
 F = "Favor Card"
-FD = "Force any other player to give you 1 card from their hand. They choose which card to give you."
-
 N = "Nope Card"
-ND = "Stop any action except for an Exploding Kitten or a Defuse. It's as if the card beneath a Nope never existed. You can also play a Nope on another Nope to negate it and create a Yup, and so on. You can play a Nope at any time before an action has begun, even if it's not your turn. Any cards that have been Noped are lost. Leave them in the Discard Pile. You can even play a Nope on a Special Combo."
-
 Sh = "Shuffle Card"
-ShD = "Shuffle the Draw Pile until the next player tells you to stop"
-
 Sk = "Skip Card"
-SkD = "Immediately end your turn without drawing a card."
-
 Se = "See the Future Card"
-SeD = "Privately view the top 3 cards from the Draw Pile and put them back in the same order. Don't show the cards to the other players."
-
-CD = "These cards are powerless on their own, but if you collect any 2 matching Cat Cards, you can play them as a Pair to steal a random card from any player."
 Ct = "Taco Cat"
 Cw = "Watermelon Cat"
 Cp = "Potato Cat"
 Cb = "Beard Cat"
 Cr = "Rainbow Cat"
+
+# Card descriptions
+CARD_DESCRIPTIONS = {
+    EK: "You must show this card immediately. Unless you have a Defuse, you're dead. "
+        "When you die, put the kitten that killed you face up in front of you so that "
+        "everyone can see that you're dead, and the rest of your cards face down in front of you.",
+    
+    D: "If you drew an Exploding Kitten, you can play this card instead of dying. "
+       "Place your Defuse in the Discard Pile. Then take the Exploding Kitten, and "
+       "without reordering or viewing the other cards, secretly put it back in the "
+       "Draw Pile anywhere you'd like. Your turn is over after playing this card.",
+    
+    A: "End your turn without drawing a card, and immediately force the next player "
+       "to take 2 turns in a row. If the victim of an Attack plays this card on any "
+       "of their turns, the attacks 'stack' and their turns are immediately transferred "
+       "to the next player.",
+    
+    F: "Force any other player to give you 1 card from their hand. They choose which card to give you.",
+    
+    N: "Stop any action except for an Exploding Kitten or a Defuse. You can play a Nope "
+       "at any time before an action has begun, even if it's not your turn.",
+    
+    Sh: "Shuffle the Draw Pile until the next player tells you to stop",
+    
+    Sk: "Immediately end your turn without drawing a card.",
+    
+    Se: "Privately view the top 3 cards from the Draw Pile and put them back in the same order.",
+    
+    "Cat": "These cards are powerless on their own, but if you collect any 2 matching Cat Cards, "
+           "you can play them as a Pair to steal a random card from any player."
+}
+
+# All cat card types
+CAT_CARDS = [Ct, Cw, Cp, Cb, Cr]
+
+
+
+
 
 Deck = [EK] + 6*[D] + 4*[A] + 4*[F] + 4*[Sh] + 4*[Sk] + 5*[Se] + 4*[Ct] + 4*[Cw] + 4*[Cp] + 4*[Cb] + 4*[Cr]
 
