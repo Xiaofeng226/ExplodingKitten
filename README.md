@@ -76,6 +76,7 @@ Contributions are welcome! Feel free to:
 5. Open a Pull Request
 
 Add more cards types to your liking, such as the lack of my card type of nope!!!!
+Maybe add other editions as well!
 
 ## 📝 License
 

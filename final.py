@@ -5,7 +5,7 @@
 import random
 # ==================== CARD DEFINITIONS ====================
 
-## New commits now on new account
+
 # Card names
 EK = "Exploding Kitten"
 D = "Defuse Card"
@@ -54,10 +54,6 @@ CARD_DESCRIPTIONS = {
 
 # All cat card types
 CAT_CARDS = [Ct, Cw, Cp, Cb, Cr]
-
-
-
-
 
 Deck = [EK] + 6*[D] + 4*[A] + 4*[F] + 4*[Sh] + 4*[Sk] + 5*[Se] + 4*[Ct] + 4*[Cw] + 4*[Cp] + 4*[Cb] + 4*[Cr]
 
