@@ -284,38 +284,27 @@ def checkLost(A):
 
 
 
-def aifavor(P1, P2):
-    Card = ""
-    if P2 == []:
-        print("Bot has no cards, you wasted your Favor Card LOL")
-    elif Ct in P2 or Cw in P2 or Cb in P2 or Cr in P2 or Cp in P2:
-        if Ct in P2:
-            Card = Ct
-        elif Cw in P2:
-            Card = Cw
-        elif Cb in P2:
-            Card = Cb
-        elif Cr in P2:
-            Card = Cr
-        elif Cp in P2:
-            Card = Cp
-    elif Sh in P2:
-        Card = Sh
-    elif Se in P2:
-        Card = Se
-    elif Sk in P2:
-        Card = Sk
-    elif A in P2:
-        Card = A
-    elif N in P2:
-        Card = N
-    elif D in P2:
-        Card = D
-    else:
-        Card = F
-    P1 += [Card]
-    P2.remove(Card)
-    print("AI gave you " + Card + "!")
+def ai_choose_card_to_give(hand: List[str]) -> str:
+    """
+    AI logic to choose which card to give away when a Favor is played against it.
+    Prioritizes giving away less valuable cards.
+    
+    Args:
+        hand: AI's hand
+    
+    Returns:
+        str: The card chosen to give away
+    """
+    # Priority order (give away least valuable first)
+    priority = CAT_CARDS + [F, Sk, Se, A, N, Sh, D]
+    
+    for card_type in priority:
+        if card_type in hand:
+            return card_type
+    
+    # Fallback: give any card
+    return hand[0]
+
         
 
 
