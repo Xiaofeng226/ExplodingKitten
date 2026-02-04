@@ -236,6 +236,44 @@ def play_see_future(deck: List[str], hand: List[str], card_index: int, discard: 
     discard.append(hand.pop(card_index))
     return top_cards
 
+
+def play_favor(asking_hand: List[str], giving_hand: List[str], is_player: bool = True) -> bool:
+    """
+    Play a Favor card to take a card from another player.
+    
+    Args:
+        asking_hand: Hand of the player asking for a card
+        giving_hand: Hand of the player giving a card
+        is_player: Whether the asking player is the human player
+    
+    Returns:
+        bool: True if successful
+    """
+    if not giving_hand:
+        print("\nOpponent has no cards! Favor wasted.")
+        return False
+    
+    if is_player:
+        # AI gives a card to player
+        card = ai_choose_card_to_give(giving_hand)
+        asking_hand.append(card)
+        giving_hand.remove(card)
+        print(f"\nAI gave you: {card}")
+    else:
+        # Player gives a card to AI
+        print("\nYour hand:")
+        display_hand(giving_hand)
+        card_index = get_valid_number(
+            "Enter the number of the card you want to give: ",
+            1, len(giving_hand)
+        ) - 1
+        
+        card = giving_hand.pop(card_index)
+        asking_hand.append(card)
+        print(f"\nYou gave AI: {card}")
+    
+    return True
+
 def checkLost(A):
     """ Checks if hand A wins 
     """
@@ -245,22 +283,6 @@ def checkLost(A):
         return False
 
 
-def favor(P1, P2):
-    """P1 gives P2 a card of thier choice
-    """
-    print()
-    print(P1)
-    print()
-    CardL = int(input("What is the location of the card you want to give to AI?")) - 1
-    if CardL > len(P1):
-        return "ERROR"
-    if CardL < 0:
-        return "ERROR"
-    Card = P1[CardL]
-    print("AI was given " + Card + " !")
-    P1.pop(CardL)
-    P2 += [Card]
-    print()
 
 def aifavor(P1, P2):
     Card = ""
