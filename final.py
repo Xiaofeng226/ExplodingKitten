@@ -305,12 +305,6 @@ def ai_choose_card_to_give(hand: List[str]) -> str:
     # Fallback: give any card
     return hand[0]
 
-        
-
-
-    
-
-
 def play_two_of_a_kind(playing_hand: List[str], target_hand: List[str], 
                        cat_card: str, discard: List[str], is_player: bool = True) -> bool:
     """
@@ -343,35 +337,50 @@ def play_two_of_a_kind(playing_hand: List[str], target_hand: List[str],
 # Game Functions
 
 
-def explode(P, Deck, Discard):
-    """Checks if there is an exploding kitten in your hand and uses your diffuse if there if not lose
+def handle_exploding_kitten(hand: List[str], deck: List[str], 
+                           discard: List[str], is_player: bool = True) -> bool:
     """
-    Survive = True
-    if D in P:
-        print()
-        print("You drew and exploding kitten!")
-        print()
-        print("You used a defuse card!")
-        print("You survive... for now...")
-        print()
-        P.remove(D)
-        Discard += [D]
-        P.remove(EK)
-        ekL = int(input("Where in the deck do you want to put the exploding kitten? (+ interger)"))
-        if ekL >= len(Deck):
-            Deck += [EK]
-        elif ekL <= 0:
-            return "ERROR"
+    Handle drawing an Exploding Kitten card.
+    
+    Args:
+        hand: The player's hand
+        deck: The game deck
+        discard: Discard pile
+        is_player: Whether this is the human player
+    
+    Returns:
+        bool: True if player survived, False if eliminated
+    """
+    player_name = "You" if is_player else "AI"
+    
+    print(f"\n{'!'*50}")
+    print(f"{player_name} drew an EXPLODING KITTEN!")
+    print(f"{'!'*50}\n")
+    
+    if D in hand:
+        print(f"{player_name} used a Defuse Card!")
+        hand.remove(D)
+        hand.remove(EK)
+        discard.append(D)
+        
+        if is_player:
+            position = get_valid_number(
+                f"Where in the deck do you want to place the Exploding Kitten? (1-{len(deck) + 1}): ",
+                1, len(deck) + 1
+            )
+            deck.insert(position - 1, EK)
         else:
-            Deck.insert(ekL-1, EK)
-        print()
-        return Survive
+            # AI places it deeper in the deck
+            position = min(len(deck), random.randint(3, max(4, len(deck))))
+            deck.insert(position, EK)
+            print(f"AI placed the Exploding Kitten back in the deck.")
+        
+        print(f"{player_name} survived... for now.\n")
+        return True
     else:
-        print()
-        print("YOU LOSE!!!! THE AI WINS")
-        print()
-        Survive = False
-        return Survive
+        print(f"\n{player_name} has no Defuse Card!")
+        print(f"{player_name} EXPLODED! Game Over!")
+        return False
 
 def aiexplode(P, Deck, Discard):
     """Checks if there is an exploding kitten in your hand and uses your diffuse if there if not lose
