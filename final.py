@@ -213,6 +213,28 @@ def play_shuffle(deck: List[str], hand: List[str], card_index: int, discard: Lis
     return True
 
 
+def play_see_future(deck: List[str], hand: List[str], card_index: int, discard: List[str]) -> List[str]:
+    """
+    Play a See the Future card to view the top 3 cards of the deck.
+    
+    Args:
+        deck: The game deck
+        hand: Player's hand
+        card_index: Index of the See the Future card
+        discard: Discard pile
+    
+    Returns:
+        List[str]: The top 3 cards (or fewer if deck has less than 3)
+    """
+    top_cards = deck[:min(3, len(deck))]
+    print("\n" + "="*50)
+    print("TOP 3 CARDS IN THE DECK:")
+    for i, card in enumerate(top_cards, 1):
+        print(f"{i}. {card}")
+    print("="*50 + "\n")
+    
+    discard.append(hand.pop(card_index))
+    return top_cards
 
 def checkLost(A):
     """ Checks if hand A wins 
@@ -275,12 +297,6 @@ def aifavor(P1, P2):
         
 
 
-def sTF(D, P, Discard):
-    """See the top three element of the Deck list
-    """
-    Discard += [Se]
-    P.remove(Se)
-    return D[:3]
     
 
 
