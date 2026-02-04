@@ -311,21 +311,34 @@ def ai_choose_card_to_give(hand: List[str]) -> str:
     
 
 
-def twoOAK(P1, P2):
-    """Playing two of the same cat card and randomly taking one of P2's card
+def play_two_of_a_kind(playing_hand: List[str], target_hand: List[str], 
+                       cat_card: str, discard: List[str], is_player: bool = True) -> bool:
     """
-    selection = random.choice(range(len(P2)))
-    P1 += [P2[selection]]
-    print("You Took " + P2[selection])
-    P2.pop(selection)
-
-def AiOAK(P1, P2):
-    """Playing two of the same cat card and randomly taking one of P2's card
+    Play two matching cat cards to steal a random card from opponent.
+    
+    Args:
+        playing_hand: Hand of player playing the combo
+        target_hand: Hand of the target player
+        cat_card: The type of cat card being played
+        discard: Discard pile
+        is_player: Whether the playing player is the human player
+    
+    Returns:
+        bool: True if successful
     """
-    selection = random.choice(range(len(P2)))
-    P1 += [P2[selection]]
-    print("Ai Took " + P2[selection])
-    P2.pop(selection)
+    if target_hand:
+        stolen_card = random.choice(target_hand)
+        target_hand.remove(stolen_card)
+        playing_hand.append(stolen_card)
+        
+        player_name = "You" if is_player else "AI"
+        print(f"\n{player_name} stole: {stolen_card}")
+        
+        discard.extend([cat_card, cat_card])
+        return True
+    else:
+        print("\nOpponent has no cards to steal!")
+        return False
 
 # Game Functions
 
