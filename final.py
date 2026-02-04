@@ -382,36 +382,7 @@ def handle_exploding_kitten(hand: List[str], deck: List[str],
         print(f"{player_name} EXPLODED! Game Over!")
         return False
 
-def aiexplode(P, Deck, Discard):
-    """Checks if there is an exploding kitten in your hand and uses your diffuse if there if not lose
-    """
-    Survive = True
-    if D in P:
-        print()
-        print("Ai drew and exploding kitten!")
-        print()
-        print("Ai used a defuse card!")
-        print("Ai survives... for now...")
-        print()
-        P.remove(D)
-        Discard += [D]
-        P.remove(EK)
-        if len(Deck) > 3:
-            ekL = random.choice(range(3,len(Deck)))
-        else:
-            ekL = len(Deck)
-        if ekL >= len(Deck):
-            Deck += [EK]
-        else:
-            Deck.insert(ekL-1, EK)
-        print()
-        return Survive
-    else:
-        print()
-        print("AI exploded! You WIN")
-        print()
-        Survive = False
-        return Survive
+    
 
         
 
