@@ -31,6 +31,8 @@ Exploding Kittens is a highly strategic, card-based game where players draw card
 - **See the Future**: View the top cards of the deck
 - **Cat Cards**: Collect pairs to steal cards from opponents
 
+Unfortunately no Nope card D:
+
 ## 🚀 Getting Started
 
 ### Prerequisites
