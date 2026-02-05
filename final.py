@@ -383,509 +383,551 @@ def handle_exploding_kitten(hand: List[str], deck: List[str],
         return False
 
     
+def ai_should_play_card(deck: List[str], ai_hand: List[str]) -> Tuple[bool, Optional[str]]:
+    """
+    Determine if AI should play a card and which one.
+    
+    Args:
+        deck: The game deck
+        ai_hand: AI's hand
+    
+    Returns:
+        Tuple[bool, Optional[str]]: (should_play, card_to_play)
+    """
+    deck_size = len(deck)
+    
+    # Always shuffle if saw an Exploding Kitten on top
+    if Sh in ai_hand:
+        # This would need to track if AI saw the future
+        pass
+    
+    # Use Skip if deck is dangerous (less than 9 cards)
+    if deck_size < 9 and Sk in ai_hand:
+        return True, Sk
+    
+    # Use Attack if deck is dangerous
+    if deck_size < 9 and A in ai_hand:
+        return True, A
+    
+    # Play Favor if deck is medium risk
+    if deck_size < 19 and F in ai_hand:
+        return True, F
+    
+    # Play two of a kind if available
+    for cat in CAT_CARDS:
+        if ai_hand.count(cat) >= 2:
+            return True, cat
+    
+    # Play See the Future to scout
+    if Se in ai_hand:
+        return True, Se
+    
+    return False, None
+
+
 
         
 
 
-def hostGame(P1, P2, Deck, Discard):
-    """Hosts a game of exploding kittens 
-    """
-    shuffle(Deck)
-    for x in range(6):
-        Deck.remove(D)
-    Deck.remove(EK)
-    P1 += [D]
-    P2 += [D]
-    for x in range(5):
-        drawC(Deck, P1)
-    for x in range(5):
-        drawC(Deck, P2)
-    Deck += 4*[D] + [EK]
-    #shuffle(Deck)
-    Turn = 0
-    x = 1
-    y = x
+# def hostGame(P1, P2, Deck, Discard):
+#     """Hosts a game of exploding kittens 
+#     """
+#     shuffle(Deck)
+#     for x in range(6):
+#         Deck.remove(D)
+#     Deck.remove(EK)
+#     P1 += [D]
+#     P2 += [D]
+#     for x in range(5):
+#         drawC(Deck, P1)
+#     for x in range(5):
+#         drawC(Deck, P2)
+#     Deck += 4*[D] + [EK]
+#     #shuffle(Deck)
+#     Turn = 0
+#     x = 1
+#     y = x
     
-    while checkLost(P1) == False and checkLost(P2) == False:
-        Turn += 1
-        n = 0
-        if Turn%2 == 1:
-            while n == 0:
-                print(P1)
-                print()
-                PC = input("Do you want to play a card? (Y or N): ")
-                if PC == "N":
-                    drawC(Deck, P1)
-                    if P1[(len(P1))-1] == EK:
-                        if explode(P1, Deck, Discard) == False:
-                            return 0
-                        else:
-                            x += 1
-                            pass
-                    break
-                elif PC == "Y":
-                    while n == 0:
-                        print(P1)
-                        print()
-                        CardL = int(input("What is the the numerical position of the card you want to play: "))
-                        Card = P1[CardL-1]
-                        print(Card)
-                        if Card == D:
-                            print("Error. Cannot be played")
-                            print()
-                        if Card == Sk:
-                            skip(CardL, P1, Discard)                      
-                            break
-                        if Card == Sh:
-                            shuffle(Deck)
-                            Discard += [Card]
-                            P1.pop(CardL-1)
-                        if Card == Ct or Card == Cw or Card == Cp or Card == Cb or Card == Cr:
-                            P1.remove(Card)
-                            if Card in P1:
-                                print("You played two of a kind!")
-                                print()
-                                Discard += 2*[Card]
-                                P1.remove(Card)
-                                twoOAK(P1, P2)
-                            else:
-                                print("You do not have two of a kind!")
-                                print()
-                                P1 += [Card]
-                        if Card == F:
-                            aifavor(P1,P2)
-                            P1.pop(CardL-1)
-                            Discard += Card
-                        if Card == Se:
-                            S = sTF(Deck, P1, Discard)
-                            print("Next Three Cards Are: ")
-                            print()
-                            print(S)
-                            print()
-                        print()
-                        print()
-                        print("The bot has " + str(len(P2)) + " cards")
-                        print()
-                        print(P1)
-                        print()
+#     while checkLost(P1) == False and checkLost(P2) == False:
+#         Turn += 1
+#         n = 0
+#         if Turn%2 == 1:
+#             while n == 0:
+#                 print(P1)
+#                 print()
+#                 PC = input("Do you want to play a card? (Y or N): ")
+#                 if PC == "N":
+#                     drawC(Deck, P1)
+#                     if P1[(len(P1))-1] == EK:
+#                         if explode(P1, Deck, Discard) == False:
+#                             return 0
+#                         else:
+#                             x += 1
+#                             pass
+#                     break
+#                 elif PC == "Y":
+#                     while n == 0:
+#                         print(P1)
+#                         print()
+#                         CardL = int(input("What is the the numerical position of the card you want to play: "))
+#                         Card = P1[CardL-1]
+#                         print(Card)
+#                         if Card == D:
+#                             print("Error. Cannot be played")
+#                             print()
+#                         if Card == Sk:
+#                             skip(CardL, P1, Discard)                      
+#                             break
+#                         if Card == Sh:
+#                             shuffle(Deck)
+#                             Discard += [Card]
+#                             P1.pop(CardL-1)
+#                         if Card == Ct or Card == Cw or Card == Cp or Card == Cb or Card == Cr:
+#                             P1.remove(Card)
+#                             if Card in P1:
+#                                 print("You played two of a kind!")
+#                                 print()
+#                                 Discard += 2*[Card]
+#                                 P1.remove(Card)
+#                                 twoOAK(P1, P2)
+#                             else:
+#                                 print("You do not have two of a kind!")
+#                                 print()
+#                                 P1 += [Card]
+#                         if Card == F:
+#                             aifavor(P1,P2)
+#                             P1.pop(CardL-1)
+#                             Discard += Card
+#                         if Card == Se:
+#                             S = sTF(Deck, P1, Discard)
+#                             print("Next Three Cards Are: ")
+#                             print()
+#                             print(S)
+#                             print()
+#                         print()
+#                         print()
+#                         print("The bot has " + str(len(P2)) + " cards")
+#                         print()
+#                         print(P1)
+#                         print()
 
-                        if Card == A:
-                            P1.remove(A)
-                            Discard += [A]
-                            print()
-                            print("You play an attatck card!")
-                            print("AI will now have two turns")
-                            print()
-                            for x in range(1):   
-                                while n == 0:
-                                    if P2 == []:
-                                        print("AI does not play a card!")
-                                        print()
-                                        drawC(Deck, P2)
-                                        if P2[(len(P2))-1] == EK:
-                                            if aiexplode(P2, Deck, Discard) == False:
-                                                return 0
-                                            else:
-                                                pass
-                                        break
-                                    if P2 != []:
-                                        if x > y:
-                                            if Sh in P2:
-                                                shuffle(Deck)
-                                                P2.remove(Sh)
-                                                Discard += [Sh]
-                                                y += 1
-                                                print()
-                                                print("AI played " + Sh + "!")
-                                                print()
+#                         if Card == A:
+#                             P1.remove(A)
+#                             Discard += [A]
+#                             print()
+#                             print("You play an attatck card!")
+#                             print("AI will now have two turns")
+#                             print()
+#                             for x in range(1):   
+#                                 while n == 0:
+#                                     if P2 == []:
+#                                         print("AI does not play a card!")
+#                                         print()
+#                                         drawC(Deck, P2)
+#                                         if P2[(len(P2))-1] == EK:
+#                                             if aiexplode(P2, Deck, Discard) == False:
+#                                                 return 0
+#                                             else:
+#                                                 pass
+#                                         break
+#                                     if P2 != []:
+#                                         if x > y:
+#                                             if Sh in P2:
+#                                                 shuffle(Deck)
+#                                                 P2.remove(Sh)
+#                                                 Discard += [Sh]
+#                                                 y += 1
+#                                                 print()
+#                                                 print("AI played " + Sh + "!")
+#                                                 print()
 
-                                        if len(Deck) < 9:
-                                            if Sk in P2:
-                                                print()
-                                                print("The AI skip its turn!")
-                                                print()
-                                                P2.remove(Sk)
-                                                break
-                                            else:
-                                                print("AI does not play a card!")
-                                                print()
-                                                drawC(Deck, P2)
-                                                if P2[(len(P2))-1] == EK:
-                                                    if aiexplode(P2, Deck, Discard) == False:
-                                                        return 0
-                                                    else:
-                                                        pass
-                                                break
+#                                         if len(Deck) < 9:
+#                                             if Sk in P2:
+#                                                 print()
+#                                                 print("The AI skip its turn!")
+#                                                 print()
+#                                                 P2.remove(Sk)
+#                                                 break
+#                                             else:
+#                                                 print("AI does not play a card!")
+#                                                 print()
+#                                                 drawC(Deck, P2)
+#                                                 if P2[(len(P2))-1] == EK:
+#                                                     if aiexplode(P2, Deck, Discard) == False:
+#                                                         return 0
+#                                                     else:
+#                                                         pass
+#                                                 break
 
-                                        if len(Deck) < 19:
-                                            if F in P2:
-                                                print()
-                                                print("AI played " + F + "!")
-                                                print()
-                                                favor(P1, P2)
-                                                P2.remove(F)
-                                                Discard += [F]
-                                            elif P2.count(Ct) >= 2 or P2.count(Cw) >= 2 or P2.count(Cp) >= 2 or P2.count(Cb) >= 2 or P2.count(Cr) >= 2:
-                                                choice = []
-                                                if P2.count(Ct) >= 2:
-                                                    choice += [Ct]
-                                                if P2.count(Cw) >= 2:
-                                                    choice += [Cw]
-                                                if P2.count(Cp) >= 2:
-                                                    choice += [Cp]
-                                                if P2.count(Cb) >= 2:
-                                                    choice += [Cb]
-                                                if P2.count(Cr) >= 2:
-                                                    choice += [Cr]
-                                                cardUse = random.choice(range(len(choice)))
-                                                CardTOK = choice[cardUse]
-                                                P2.remove(CardTOK)
-                                                P2.remove(CardTOK)
-                                                print("AI played Two of A Kind of " + CardTOK + "!")
-                                                AiOAK(P2, P1)
-                                                Discard += 2*[CardTOK] 
-                                            elif Se in P2:
-                                                S = sTF(Deck, P2, Discard)
-                                                print()
-                                                print("AI played " + Se + "!")
-                                                print()
-                                                if S[0] == EK:
-                                                    if Sk in P2:
-                                                        print()
-                                                        print("The AI skip its turn!")
-                                                        print()
-                                                        P2.remove(Sk)
-                                                        break
-                                                    elif Sh in P2:
-                                                        print()
-                                                        print("The AI shuffles the deck!")
-                                                        print()
-                                                        P2.remove(Sh)
-                                                        shuffle(Deck)        
-                                                    else: 
-                                                        print()
-                                                        print("AI says oh oh")
-                                                        print()
-                                            else:
-                                                print("AI does not play a card!")
-                                                print()
-                                                drawC(Deck, P2)
-                                                if P2[(len(P2))-1] == EK:
-                                                    if aiexplode(P2, Deck, Discard) == False:
-                                                        return 0
-                                                    else:
-                                                        pass
-                                                break
-                                        else:
-                                            print("AI does not play a card!")
-                                            print()
-                                            drawC(Deck, P2)
-                                            if P2[(len(P2))-1] == EK:
-                                                if aiexplode(P2, Deck, Discard) == False:
-                                                    return 0
-                                                else:
-                                                    pass
-                                            break
-                            break        
+#                                         if len(Deck) < 19:
+#                                             if F in P2:
+#                                                 print()
+#                                                 print("AI played " + F + "!")
+#                                                 print()
+#                                                 favor(P1, P2)
+#                                                 P2.remove(F)
+#                                                 Discard += [F]
+#                                             elif P2.count(Ct) >= 2 or P2.count(Cw) >= 2 or P2.count(Cp) >= 2 or P2.count(Cb) >= 2 or P2.count(Cr) >= 2:
+#                                                 choice = []
+#                                                 if P2.count(Ct) >= 2:
+#                                                     choice += [Ct]
+#                                                 if P2.count(Cw) >= 2:
+#                                                     choice += [Cw]
+#                                                 if P2.count(Cp) >= 2:
+#                                                     choice += [Cp]
+#                                                 if P2.count(Cb) >= 2:
+#                                                     choice += [Cb]
+#                                                 if P2.count(Cr) >= 2:
+#                                                     choice += [Cr]
+#                                                 cardUse = random.choice(range(len(choice)))
+#                                                 CardTOK = choice[cardUse]
+#                                                 P2.remove(CardTOK)
+#                                                 P2.remove(CardTOK)
+#                                                 print("AI played Two of A Kind of " + CardTOK + "!")
+#                                                 AiOAK(P2, P1)
+#                                                 Discard += 2*[CardTOK] 
+#                                             elif Se in P2:
+#                                                 S = sTF(Deck, P2, Discard)
+#                                                 print()
+#                                                 print("AI played " + Se + "!")
+#                                                 print()
+#                                                 if S[0] == EK:
+#                                                     if Sk in P2:
+#                                                         print()
+#                                                         print("The AI skip its turn!")
+#                                                         print()
+#                                                         P2.remove(Sk)
+#                                                         break
+#                                                     elif Sh in P2:
+#                                                         print()
+#                                                         print("The AI shuffles the deck!")
+#                                                         print()
+#                                                         P2.remove(Sh)
+#                                                         shuffle(Deck)        
+#                                                     else: 
+#                                                         print()
+#                                                         print("AI says oh oh")
+#                                                         print()
+#                                             else:
+#                                                 print("AI does not play a card!")
+#                                                 print()
+#                                                 drawC(Deck, P2)
+#                                                 if P2[(len(P2))-1] == EK:
+#                                                     if aiexplode(P2, Deck, Discard) == False:
+#                                                         return 0
+#                                                     else:
+#                                                         pass
+#                                                 break
+#                                         else:
+#                                             print("AI does not play a card!")
+#                                             print()
+#                                             drawC(Deck, P2)
+#                                             if P2[(len(P2))-1] == EK:
+#                                                 if aiexplode(P2, Deck, Discard) == False:
+#                                                     return 0
+#                                                 else:
+#                                                     pass
+#                                             break
+#                             break        
                             
                             
-                        PCA = input("Do you want to play another card? (Y or N): ")
-                        if PCA == "Y":
-                            pass
-                        if PCA == "N":
-                            drawC(Deck, P1)
-                            if P1[(len(P1))-1] == EK:
-                                if explode(P1, Deck, Discard) == False:
-                                    return 0
-                                else:
-                                    x += 1
-                                    pass
-                            break
-                else:
-                    return "ERROR"
-                break
+#                         PCA = input("Do you want to play another card? (Y or N): ")
+#                         if PCA == "Y":
+#                             pass
+#                         if PCA == "N":
+#                             drawC(Deck, P1)
+#                             if P1[(len(P1))-1] == EK:
+#                                 if explode(P1, Deck, Discard) == False:
+#                                     return 0
+#                                 else:
+#                                     x += 1
+#                                     pass
+#                             break
+#                 else:
+#                     return "ERROR"
+#                 break
 
-#### Bots Turn
+# #### Bots Turn
 
-        elif Turn%2 == 0:
-            while n == 0:
-                if P2 == []:
-                    print("AI does not play a card!")
-                    print()
-                    drawC(Deck, P2)
-                    if P2[(len(P2))-1] == EK:
-                        if aiexplode(P2, Deck, Discard) == False:
-                            return 0
-                        else:
-                            pass
-                    break
-                if P2 != []:
-                    if x > y:
-                        if Sh in P2:
-                            shuffle(Deck)
-                            P2.remove(Sh)
-                            Discard += [Sh]
-                            y += 1
-                            print()
-                            print("AI played " + Sh + "!")
-                            print()
+#         elif Turn%2 == 0:
+#             while n == 0:
+#                 if P2 == []:
+#                     print("AI does not play a card!")
+#                     print()
+#                     drawC(Deck, P2)
+#                     if P2[(len(P2))-1] == EK:
+#                         if aiexplode(P2, Deck, Discard) == False:
+#                             return 0
+#                         else:
+#                             pass
+#                     break
+#                 if P2 != []:
+#                     if x > y:
+#                         if Sh in P2:
+#                             shuffle(Deck)
+#                             P2.remove(Sh)
+#                             Discard += [Sh]
+#                             y += 1
+#                             print()
+#                             print("AI played " + Sh + "!")
+#                             print()
 
-                    if len(Deck) < 9:
-                        if A in P2:
-                            P2.remove(A)
-                            Discard += [A]
-                            print()
-                            print("The Ai plays an attatck card!")
-                            print("You will now have two turns")
-                            print()
-                            for x in range(1):
-                                while n == 0:
-                                    print(P1)
-                                    print()
-                                    PC = input("Do you want to play a card? (Y or N): ")
-                                    if PC == "N":
-                                        drawC(Deck, P1)
-                                        if P1[(len(P1))-1] == EK:
-                                            if explode(P1, Deck, Discard) == False:
-                                                return 0
-                                            else:
-                                                x += 1
-                                                pass
-                                        break
-                                    elif PC == "Y":
-                                        while n == 0:
-                                            print(P1)
-                                            print()
-                                            CardL = int(input("What is the the numerical position of the card you want to play (Not Attack Card): "))
-                                            Card = P1[CardL-1]
-                                            print(Card)
-                                            if Card == D:
-                                                print("Error. Cannot be played")
-                                                print()
-                                            if Card == Sk:
-                                                skip(CardL, P1, Discard)                      
-                                                break
-                                            if Card == Sh:
-                                                shuffle(Deck)
-                                                Discard += [Card]
-                                                P1.pop(CardL-1)
-                                            if Card == Ct or Card == Cw or Card == Cp or Card == Cb or Card == Cr:
-                                                P1.remove(Card)
-                                                if Card in P1:
-                                                    print("You played two of a kind!")
-                                                    print()
-                                                    Discard += 2*[Card]
-                                                    P1.remove(Card)
-                                                    twoOAK(P1, P2)
-                                                else:
-                                                    print("You do not have tow of a kind!")
-                                                    print()
-                                                    P1 += [Card]
-                                            if Card == F:
-                                                aifavor(P1,P2)
-                                                P1.pop(CardL-1)
-                                                Discard += Card
-                                            if Card == Se:
-                                                S = sTF(Deck, P1, Discard)
-                                                print("Next Three Cards Are: ")
-                                                print()
-                                                print(S)
-                                                print()
-                                            print()
-                                            print()
-                                            print("The bot has " + str(len(P2)) + " cards")
-                                            print()
-                                            print(P1)
-                                            print()
+#                     if len(Deck) < 9:
+#                         if A in P2:
+#                             P2.remove(A)
+#                             Discard += [A]
+#                             print()
+#                             print("The Ai plays an attatck card!")
+#                             print("You will now have two turns")
+#                             print()
+#                             for x in range(1):
+#                                 while n == 0:
+#                                     print(P1)
+#                                     print()
+#                                     PC = input("Do you want to play a card? (Y or N): ")
+#                                     if PC == "N":
+#                                         drawC(Deck, P1)
+#                                         if P1[(len(P1))-1] == EK:
+#                                             if explode(P1, Deck, Discard) == False:
+#                                                 return 0
+#                                             else:
+#                                                 x += 1
+#                                                 pass
+#                                         break
+#                                     elif PC == "Y":
+#                                         while n == 0:
+#                                             print(P1)
+#                                             print()
+#                                             CardL = int(input("What is the the numerical position of the card you want to play (Not Attack Card): "))
+#                                             Card = P1[CardL-1]
+#                                             print(Card)
+#                                             if Card == D:
+#                                                 print("Error. Cannot be played")
+#                                                 print()
+#                                             if Card == Sk:
+#                                                 skip(CardL, P1, Discard)                      
+#                                                 break
+#                                             if Card == Sh:
+#                                                 shuffle(Deck)
+#                                                 Discard += [Card]
+#                                                 P1.pop(CardL-1)
+#                                             if Card == Ct or Card == Cw or Card == Cp or Card == Cb or Card == Cr:
+#                                                 P1.remove(Card)
+#                                                 if Card in P1:
+#                                                     print("You played two of a kind!")
+#                                                     print()
+#                                                     Discard += 2*[Card]
+#                                                     P1.remove(Card)
+#                                                     twoOAK(P1, P2)
+#                                                 else:
+#                                                     print("You do not have tow of a kind!")
+#                                                     print()
+#                                                     P1 += [Card]
+#                                             if Card == F:
+#                                                 aifavor(P1,P2)
+#                                                 P1.pop(CardL-1)
+#                                                 Discard += Card
+#                                             if Card == Se:
+#                                                 S = sTF(Deck, P1, Discard)
+#                                                 print("Next Three Cards Are: ")
+#                                                 print()
+#                                                 print(S)
+#                                                 print()
+#                                             print()
+#                                             print()
+#                                             print("The bot has " + str(len(P2)) + " cards")
+#                                             print()
+#                                             print(P1)
+#                                             print()
 
-                                            if Card == A:
-                                                return "ERROR"
-                                            PCA = input("Do you want to play another card? (Y or N): ")
-                                            if PCA == "Y":
-                                                pass
-                                            if PCA == "N":
-                                                drawC(Deck, P1)
-                                                if P1[(len(P1))-1] == EK:
-                                                    if explode(P1, Deck, Discard) == False:
-                                                        return 0
-                                                    else:
-                                                        x += 1
-                                                        pass
-                                                break
-                                    else:
-                                        return "ERROR"
-                                    break
-                            break 
+#                                             if Card == A:
+#                                                 return "ERROR"
+#                                             PCA = input("Do you want to play another card? (Y or N): ")
+#                                             if PCA == "Y":
+#                                                 pass
+#                                             if PCA == "N":
+#                                                 drawC(Deck, P1)
+#                                                 if P1[(len(P1))-1] == EK:
+#                                                     if explode(P1, Deck, Discard) == False:
+#                                                         return 0
+#                                                     else:
+#                                                         x += 1
+#                                                         pass
+#                                                 break
+#                                     else:
+#                                         return "ERROR"
+#                                     break
+#                             break 
                           
                         
-                        elif Sk in P2:   
-                            print()
-                            print("The AI skip its turn!")
-                            print()
-                            P2.remove(Sk)
-                            break
-                        else:
-                            print("AI does not play a card!")
-                            print()
-                            drawC(Deck, P2)
-                            if P2[(len(P2))-1] == EK:
-                                if aiexplode(P2, Deck, Discard) == False:
-                                    return 0
-                                else:
-                                    pass
-                            break
+#                         elif Sk in P2:   
+#                             print()
+#                             print("The AI skip its turn!")
+#                             print()
+#                             P2.remove(Sk)
+#                             break
+#                         else:
+#                             print("AI does not play a card!")
+#                             print()
+#                             drawC(Deck, P2)
+#                             if P2[(len(P2))-1] == EK:
+#                                 if aiexplode(P2, Deck, Discard) == False:
+#                                     return 0
+#                                 else:
+#                                     pass
+#                             break
 
-                    if len(Deck) < 19:
-                        if F in P2:
-                            print()
-                            print("AI played " + F + "!")
-                            print()
-                            favor(P1, P2)
-                            P2.remove(F)
-                            Discard += [F]
-                        elif P2.count(Ct) >= 2 or P2.count(Cw) >= 2 or P2.count(Cp) >= 2 or P2.count(Cb) >= 2 or P2.count(Cr) >= 2:
-                            choice = []
-                            if P2.count(Ct) >= 2:
-                                choice += [Ct]
-                            if P2.count(Cw) >= 2:
-                                choice += [Cw]
-                            if P2.count(Cp) >= 2:
-                                choice += [Cp]
-                            if P2.count(Cb) >= 2:
-                                choice += [Cb]
-                            if P2.count(Cr) >= 2:
-                                choice += [Cr]
-                            cardUse = random.choice(range(len(choice)))
-                            CardTOK = choice[cardUse]
-                            P2.remove(CardTOK)
-                            P2.remove(CardTOK)
-                            print("AI played Two of A Kind of " + CardTOK + "!")
-                            AiOAK(P2, P1)
-                            Discard += 2*[CardTOK] 
-                        elif Se in P2:
-                            S = sTF(Deck, P2, Discard)
-                            print()
-                            print("AI played " + Se + "!")
-                            print()
-                            if S[0] == EK:
-                                if Sk in P2:
-                                    print()
-                                    print("The AI skip its turn!")
-                                    print()
-                                    P2.remove(Sk)
-                                    break
-                                elif Sh in P2:
-                                    print()
-                                    print("The AI shuffles the deck!")
-                                    print()
-                                    P2.remove(Sh)
-                                    shuffle(Deck)
-                                elif A in P2:
-                                    P2.remove(A)
-                                    Discard += [A]
-                                    print()
-                                    print("The Ai plays an attatck card!")
-                                    print("You will now have two turns")
-                                    print()
-                                    for x in range(1):
-                                        while n == 0:
-                                            print(P1)
-                                            print()
-                                            PC = input("Do you want to play a card? (Y or N): ")
-                                            if PC == "N":
-                                                drawC(Deck, P1)
-                                                if P1[(len(P1))-1] == EK:
-                                                    if explode(P1, Deck, Discard) == False:
-                                                        return 0
-                                                    else:
-                                                        x += 1
-                                                        pass
-                                                break
-                                            elif PC == "Y":
-                                                while n == 0:
-                                                    print(P1)
-                                                    print()
-                                                    CardL = int(input("What is the the numerical position of the card you want to play (Not Attack Card): "))
-                                                    Card = P1[CardL-1]
-                                                    print(Card)
-                                                    if Card == D:
-                                                        print("Error. Cannot be played")
-                                                        print()
-                                                    if Card == Sk:
-                                                        skip(CardL, P1, Discard)                      
-                                                        break
-                                                    if Card == Sh:
-                                                        shuffle(Deck)
-                                                        Discard += [Card]
-                                                        P1.pop(CardL-1)
-                                                    if Card == Ct or Card == Cw or Card == Cp or Card == Cb or Card == Cr:
-                                                        P1.remove(Card)
-                                                        if Card in P1:
-                                                            print("You played two of a kind!")
-                                                            print()
-                                                            Discard += 2*[Card]
-                                                            P1.remove(Card)
-                                                            twoOAK(P1, P2)
-                                                        else:
-                                                            print("You do not have tow of a kind!")
-                                                            print()
-                                                            P1 += [Card]
-                                                    if Card == F:
-                                                        aifavor(P1,P2)
-                                                        P1.pop(CardL-1)
-                                                        Discard += Card
-                                                    if Card == Se:
-                                                        S = sTF(Deck, P1, Discard)
-                                                        print("Next Three Cards Are: ")
-                                                        print()
-                                                        print(S)
-                                                        print()
-                                                    print()
-                                                    print()
-                                                    print("The bot has " + str(len(P2)) + " cards")
-                                                    print()
-                                                    print(P1)
-                                                    print()
+#                     if len(Deck) < 19:
+#                         if F in P2:
+#                             print()
+#                             print("AI played " + F + "!")
+#                             print()
+#                             favor(P1, P2)
+#                             P2.remove(F)
+#                             Discard += [F]
+#                         elif P2.count(Ct) >= 2 or P2.count(Cw) >= 2 or P2.count(Cp) >= 2 or P2.count(Cb) >= 2 or P2.count(Cr) >= 2:
+#                             choice = []
+#                             if P2.count(Ct) >= 2:
+#                                 choice += [Ct]
+#                             if P2.count(Cw) >= 2:
+#                                 choice += [Cw]
+#                             if P2.count(Cp) >= 2:
+#                                 choice += [Cp]
+#                             if P2.count(Cb) >= 2:
+#                                 choice += [Cb]
+#                             if P2.count(Cr) >= 2:
+#                                 choice += [Cr]
+#                             cardUse = random.choice(range(len(choice)))
+#                             CardTOK = choice[cardUse]
+#                             P2.remove(CardTOK)
+#                             P2.remove(CardTOK)
+#                             print("AI played Two of A Kind of " + CardTOK + "!")
+#                             AiOAK(P2, P1)
+#                             Discard += 2*[CardTOK] 
+#                         elif Se in P2:
+#                             S = sTF(Deck, P2, Discard)
+#                             print()
+#                             print("AI played " + Se + "!")
+#                             print()
+#                             if S[0] == EK:
+#                                 if Sk in P2:
+#                                     print()
+#                                     print("The AI skip its turn!")
+#                                     print()
+#                                     P2.remove(Sk)
+#                                     break
+#                                 elif Sh in P2:
+#                                     print()
+#                                     print("The AI shuffles the deck!")
+#                                     print()
+#                                     P2.remove(Sh)
+#                                     shuffle(Deck)
+#                                 elif A in P2:
+#                                     P2.remove(A)
+#                                     Discard += [A]
+#                                     print()
+#                                     print("The Ai plays an attatck card!")
+#                                     print("You will now have two turns")
+#                                     print()
+#                                     for x in range(1):
+#                                         while n == 0:
+#                                             print(P1)
+#                                             print()
+#                                             PC = input("Do you want to play a card? (Y or N): ")
+#                                             if PC == "N":
+#                                                 drawC(Deck, P1)
+#                                                 if P1[(len(P1))-1] == EK:
+#                                                     if explode(P1, Deck, Discard) == False:
+#                                                         return 0
+#                                                     else:
+#                                                         x += 1
+#                                                         pass
+#                                                 break
+#                                             elif PC == "Y":
+#                                                 while n == 0:
+#                                                     print(P1)
+#                                                     print()
+#                                                     CardL = int(input("What is the the numerical position of the card you want to play (Not Attack Card): "))
+#                                                     Card = P1[CardL-1]
+#                                                     print(Card)
+#                                                     if Card == D:
+#                                                         print("Error. Cannot be played")
+#                                                         print()
+#                                                     if Card == Sk:
+#                                                         skip(CardL, P1, Discard)                      
+#                                                         break
+#                                                     if Card == Sh:
+#                                                         shuffle(Deck)
+#                                                         Discard += [Card]
+#                                                         P1.pop(CardL-1)
+#                                                     if Card == Ct or Card == Cw or Card == Cp or Card == Cb or Card == Cr:
+#                                                         P1.remove(Card)
+#                                                         if Card in P1:
+#                                                             print("You played two of a kind!")
+#                                                             print()
+#                                                             Discard += 2*[Card]
+#                                                             P1.remove(Card)
+#                                                             twoOAK(P1, P2)
+#                                                         else:
+#                                                             print("You do not have tow of a kind!")
+#                                                             print()
+#                                                             P1 += [Card]
+#                                                     if Card == F:
+#                                                         aifavor(P1,P2)
+#                                                         P1.pop(CardL-1)
+#                                                         Discard += Card
+#                                                     if Card == Se:
+#                                                         S = sTF(Deck, P1, Discard)
+#                                                         print("Next Three Cards Are: ")
+#                                                         print()
+#                                                         print(S)
+#                                                         print()
+#                                                     print()
+#                                                     print()
+#                                                     print("The bot has " + str(len(P2)) + " cards")
+#                                                     print()
+#                                                     print(P1)
+#                                                     print()
 
-                                                    if Card == A:
-                                                        return "ERROR"
-                                                    PCA = input("Do you want to play another card? (Y or N): ")
-                                                    if PCA == "Y":
-                                                        pass
-                                                    if PCA == "N":
-                                                        drawC(Deck, P1)
-                                                        if P1[(len(P1))-1] == EK:
-                                                            if explode(P1, Deck, Discard) == False:
-                                                                return 0
-                                                            else:
-                                                                x += 1
-                                                                pass
-                                                        break
-                                            else:
-                                                return "ERROR"
-                                            break
-                                    break        
-                                else: 
-                                    print()
-                                    print("AI says oh oh")
-                                    print()
-                        else:
-                            print("AI does not play a card!")
-                            print()
-                            drawC(Deck, P2)
-                            if P2[(len(P2))-1] == EK:
-                                if aiexplode(P2, Deck, Discard) == False:
-                                    return 0
-                                else:
-                                    pass
-                            break
-                    else:
-                        print("AI does not play a card!")
-                        print()
-                        drawC(Deck, P2)
-                        if P2[(len(P2))-1] == EK:
-                            if aiexplode(P2, Deck, Discard) == False:
-                                return 0
-                            else:
-                                pass
-                        break
+#                                                     if Card == A:
+#                                                         return "ERROR"
+#                                                     PCA = input("Do you want to play another card? (Y or N): ")
+#                                                     if PCA == "Y":
+#                                                         pass
+#                                                     if PCA == "N":
+#                                                         drawC(Deck, P1)
+#                                                         if P1[(len(P1))-1] == EK:
+#                                                             if explode(P1, Deck, Discard) == False:
+#                                                                 return 0
+#                                                             else:
+#                                                                 x += 1
+#                                                                 pass
+#                                                         break
+#                                             else:
+#                                                 return "ERROR"
+#                                             break
+#                                     break        
+#                                 else: 
+#                                     print()
+#                                     print("AI says oh oh")
+#                                     print()
+#                         else:
+#                             print("AI does not play a card!")
+#                             print()
+#                             drawC(Deck, P2)
+#                             if P2[(len(P2))-1] == EK:
+#                                 if aiexplode(P2, Deck, Discard) == False:
+#                                     return 0
+#                                 else:
+#                                     pass
+#                             break
+#                     else:
+#                         print("AI does not play a card!")
+#                         print()
+#                         drawC(Deck, P2)
+#                         if P2[(len(P2))-1] == EK:
+#                             if aiexplode(P2, Deck, Discard) == False:
+#                                 return 0
+#                             else:
+#                                 pass
+#                         break
