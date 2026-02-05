@@ -12,7 +12,6 @@ EK = "Exploding Kitten"
 D = "Defuse Card"
 A = "Attack Card"
 F = "Favor Card"
-N = "Nope Card"
 Sh = "Shuffle Card"
 Sk = "Skip Card"
 Se = "See the Future Card"
@@ -40,9 +39,6 @@ CARD_DESCRIPTIONS = {
     
     F: "Force any other player to give you 1 card from their hand. They choose which card to give you.",
     
-    N: "Stop any action except for an Exploding Kitten or a Defuse. You can play a Nope "
-       "at any time before an action has begun, even if it's not your turn.",
-    
     Sh: "Shuffle the Draw Pile until the next player tells you to stop",
     
     Sk: "Immediately end your turn without drawing a card.",
@@ -68,7 +64,6 @@ def create_deck() -> List[str]:
         6 * [D] +        # 6 Defuse cards
         4 * [A] +        # 4 Attack cards
         4 * [F] +        # 4 Favor cards
-        5 * [N] +        # 5 Nope cards
         4 * [Sh] +       # 4 Shuffle cards
         4 * [Sk] +       # 4 Skip cards
         5 * [Se] +       # 5 See the Future cards
