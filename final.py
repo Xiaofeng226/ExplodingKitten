@@ -274,16 +274,6 @@ def play_favor(asking_hand: List[str], giving_hand: List[str], is_player: bool =
     
     return True
 
-def checkLost(A):
-    """ Checks if hand A wins 
-    """
-    if D not in A and EK in A:
-        return True
-    else:
-        return False
-
-
-
 def ai_choose_card_to_give(hand: List[str]) -> str:
     """
     AI logic to choose which card to give away when a Favor is played against it.
@@ -425,7 +415,81 @@ def ai_should_play_card(deck: List[str], ai_hand: List[str]) -> Tuple[bool, Opti
     return False, None
 
 
-
+def ai_play_turn(ai_hand: List[str], player_hand: List[str], 
+                deck: List[str], discard: List[str]) -> bool:
+    """
+    Execute the AI's turn.
+    
+    Args:
+        ai_hand: AI's hand
+        player_hand: Player's hand
+        deck: Game deck
+        discard: Discard pile
+    
+    Returns:
+        bool: True if AI survived the turn
+    """
+    print("\n" + "="*50)
+    print("AI's Turn")
+    print("="*50)
+    
+    # AI decision making
+    should_play, card = ai_should_play_card(deck, ai_hand)
+    
+    if should_play and card:
+        if card == Sk:
+            print("AI plays Skip!")
+            ai_hand.remove(Sk)
+            discard.append(Sk)
+            return True
+        
+        elif card == Sh:
+            print("AI plays Shuffle!")
+            play_shuffle(deck, ai_hand, ai_hand.index(Sh), discard)
+        
+        elif card == Se:
+            print("AI plays See the Future!")
+            top_cards = play_see_future(deck, ai_hand, ai_hand.index(Se), discard)
+            # AI could make decisions based on what it sees
+            if top_cards and top_cards[0] == EK:
+                print("AI sees danger ahead!")
+                # Try to play Skip or Shuffle if available
+                if Sk in ai_hand:
+                    print("AI plays Skip to avoid danger!")
+                    ai_hand.remove(Sk)
+                    discard.append(Sk)
+                    return True
+                elif Sh in ai_hand:
+                    print("AI plays Shuffle to avoid danger!")
+                    play_shuffle(deck, ai_hand, ai_hand.index(Sh), discard)
+        
+        elif card == F:
+            print("AI plays Favor!")
+            play_favor(ai_hand, player_hand, is_player=False)
+            ai_hand.remove(F)
+            discard.append(F)
+        
+        elif card == A:
+            print("AI plays Attack!")
+            ai_hand.remove(A)
+            discard.append(A)
+            return True  # Attack handled separately
+        
+        elif card in CAT_CARDS and ai_hand.count(card) >= 2:
+            print(f"AI plays Two of a Kind: {card}!")
+            ai_hand.remove(card)
+            ai_hand.remove(card)
+            play_two_of_a_kind(ai_hand, player_hand, card, discard, is_player=False)
+    
+    # Draw a card
+    print("\nAI draws a card...")
+    drawn_card = draw_card(deck, ai_hand)
+    
+    if drawn_card == EK:
+        return handle_exploding_kitten(ai_hand, deck, discard, is_player=False)
+    
+    print(f"AI now has {len(ai_hand)} cards.")
+    return True
         
 
 
