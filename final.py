@@ -491,7 +491,107 @@ def ai_play_turn(ai_hand: List[str], player_hand: List[str],
     print(f"AI now has {len(ai_hand)} cards.")
     return True
         
-
+def player_play_turn(player_hand: List[str], ai_hand: List[str], 
+                    deck: List[str], discard: List[str]) -> bool:
+    """
+    Execute the player's turn.
+    
+    Args:
+        player_hand: Player's hand
+        ai_hand: AI's hand
+        deck: Game deck
+        discard: Discard pile
+    
+    Returns:
+        bool: True if player survived the turn
+    """
+    print("\n" + "="*50)
+    print("Your Turn")
+    print("="*50)
+    print(f"AI has {len(ai_hand)} cards")
+    print(f"Deck has {len(deck)} cards remaining")
+    
+    turn_over = False
+    
+    while not turn_over:
+        display_hand(player_hand)
+        
+        play_card = get_valid_input("Do you want to play a card? (Y/N): ", ["Y", "N"])
+        
+        if play_card == "N":
+            # End turn and draw
+            print("\nDrawing a card...")
+            drawn_card = draw_card(deck, player_hand)
+            
+            if drawn_card == EK:
+                return handle_exploding_kitten(player_hand, deck, discard, is_player=True)
+            
+            print(f"You drew: {drawn_card}")
+            turn_over = True
+        
+        else:
+            # Play a card
+            card_index = get_valid_number(
+                "Enter the number of the card you want to play: ",
+                1, len(player_hand)
+            ) - 1
+            
+            card = player_hand[card_index]
+            
+            if card == D:
+                print("Error: Defuse cards can only be played when you draw an Exploding Kitten!")
+                continue
+            
+            elif card == Sk:
+                play_skip(player_hand, card_index, discard)
+                turn_over = True
+            
+            elif card == Sh:
+                play_shuffle(deck, player_hand, card_index, discard)
+            
+            elif card == Se:
+                play_see_future(deck, player_hand, card_index, discard)
+            
+            elif card == F:
+                player_hand.pop(card_index)
+                discard.append(F)
+                play_favor(player_hand, ai_hand, is_player=True)
+            
+            elif card == A:
+                print("\nYou play Attack! AI must take 2 turns.")
+                player_hand.pop(card_index)
+                discard.append(A)
+                turn_over = True
+                # Attack logic would be handled in main game loop
+            
+            elif card in CAT_CARDS:
+                # Check for two of a kind
+                if player_hand.count(card) >= 2:
+                    print(f"\nYou play Two of a Kind: {card}!")
+                    player_hand.remove(card)
+                    player_hand.remove(card)
+                    play_two_of_a_kind(player_hand, ai_hand, card, discard, is_player=True)
+                else:
+                    print("\nYou need two matching cat cards to play this!")
+                    continue
+            
+            if not turn_over:
+                continue_playing = get_valid_input(
+                    "\nDo you want to play another card? (Y/N): ", 
+                    ["Y", "N"]
+                )
+                
+                if continue_playing == "N":
+                    print("\nDrawing a card...")
+                    drawn_card = draw_card(deck, player_hand)
+                    
+                    if drawn_card == EK:
+                        return handle_exploding_kitten(player_hand, deck, discard, is_player=True)
+                    
+                    print(f"You drew: {drawn_card}")
+                    turn_over = True
+    
+    return True
 
 # def hostGame(P1, P2, Deck, Discard):
 #     """Hosts a game of exploding kittens 
